@@ -26,6 +26,8 @@ import com.amazonaws.http.IdleConnectionReaper;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchIllegalArgumentException;
 import org.elasticsearch.common.collect.Tuple;
@@ -59,16 +61,16 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
         String account = componentSettings.get("access_key", settings.get("cloud.account"));
         String key = componentSettings.get("secret_key", settings.get("cloud.key"));
 
-        return client(null, null, null, account, key, null);
+        return client(null, null, null, account, key, null, null);
     }
 
     @Override
     public AmazonS3 client(String endpoint, String protocol, String region, String account, String key) {
-        return client(endpoint, protocol, region, account, key, null);
+        return client(endpoint, protocol, region, account, key, null, null);
     }
 
     @Override
-    public synchronized AmazonS3 client(String endpoint, String protocol, String region, String account, String key, Integer maxRetries) {
+    public synchronized AmazonS3 client(String endpoint, String protocol, String region, String account, String key, Integer maxRetries, Boolean pathStyleAccess) {
         if (region != null && endpoint == null) {
             endpoint = getEndpoint(region);
             logger.debug("using s3 region [{}], with endpoint [{}]", region, endpoint);
@@ -87,6 +89,10 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
         }
 
         client = createClient(endpoint, protocol, account, key, maxRetries);
+        if (pathStyleAccess != null) {
+            S3ClientOptions clientOptions = S3ClientOptions.builder().setPathStyleAccess(pathStyleAccess.booleanValue()).build();
+            client.setS3ClientOptions(clientOptions);
+        }
         clients.put(clientDescriptor, client);
 
         return client;
