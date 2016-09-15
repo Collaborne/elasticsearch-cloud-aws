@@ -80,17 +80,20 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
             key = componentSettings.get("secret_key", settings.get("cloud.key"));
         }
 
-        return getClient(endpoint, protocol, account, key, maxRetries);
-    }
-
-
-    private synchronized AmazonS3 getClient(String endpoint, String protocol, String account, String key, Integer maxRetries) {
         Tuple<String, String> clientDescriptor = new Tuple<String, String>(endpoint, account);
         AmazonS3Client client = clients.get(clientDescriptor);
         if (client != null) {
             return client;
         }
 
+        client = createClient(endpoint, protocol, account, key, maxRetries);
+        clients.put(clientDescriptor, client);
+
+        return client;
+    }
+
+
+    private synchronized AmazonS3Client createClient(String endpoint, String protocol, String account, String key, Integer maxRetries) {
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         // the response metadata cache is only there for diagnostics purposes,
         // but can force objects from every response to the old generation.
@@ -151,12 +154,11 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
                     new StaticCredentialsProvider(new BasicAWSCredentials(account, key))
             );
         }
-        client = new AmazonS3Client(credentials, clientConfiguration);
+        AmazonS3Client client = new AmazonS3Client(credentials, clientConfiguration);
 
         if (endpoint != null) {
             client.setEndpoint(endpoint);
         }
-        clients.put(clientDescriptor, client);
         return client;
     }
 
