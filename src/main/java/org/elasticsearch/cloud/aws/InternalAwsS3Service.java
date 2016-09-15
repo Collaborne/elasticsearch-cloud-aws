@@ -56,11 +56,10 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
 
     @Override
     public synchronized AmazonS3 client() {
-        String endpoint = getDefaultEndpoint();
         String account = componentSettings.get("access_key", settings.get("cloud.account"));
         String key = componentSettings.get("secret_key", settings.get("cloud.key"));
 
-        return getClient(endpoint, null, account, key, null);
+        return client(null, null, null, account, key, null);
     }
 
     @Override
