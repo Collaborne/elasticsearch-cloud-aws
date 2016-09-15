@@ -99,8 +99,7 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
         // but can force objects from every response to the old generation.
         clientConfiguration.setResponseMetadataCacheSize(0);
         if (protocol == null) {
-            protocol = componentSettings.get("protocol", "https").toLowerCase();
-            protocol = componentSettings.get("s3.protocol", protocol).toLowerCase();
+            protocol = componentSettings.get("s3.protocol", componentSettings.get("protocol", "https")).toLowerCase();
         }
 
         if ("http".equals(protocol)) {
@@ -111,11 +110,9 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
             throw new ElasticsearchIllegalArgumentException("No protocol supported [" + protocol + "], can either be [http] or [https]");
         }
 
-        String proxyHost = componentSettings.get("proxy_host");
-        proxyHost = componentSettings.get("s3.proxy_host", proxyHost);
+        String proxyHost = componentSettings.get("s3.proxy_host", componentSettings.get("proxy_host"));
         if (proxyHost != null) {
-            String portString = componentSettings.get("proxy_port", "80");
-            portString = componentSettings.get("s3.proxy_port", portString);
+            String portString = componentSettings.get("s3.proxy_port", componentSettings.get("proxy_port", "80"));
             Integer proxyPort;
             try {
                 proxyPort = Integer.parseInt(portString, 10);
