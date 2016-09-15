@@ -28,6 +28,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.S3ResponseMetadata;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.waiters.AmazonS3Waiters;
 
 import java.io.File;
 import java.io.InputStream;
@@ -649,5 +650,121 @@ public class AmazonS3Wrapper implements AmazonS3 {
 			GetBucketReplicationConfigurationRequest getBucketReplicationConfigurationRequest)
 					throws AmazonServiceException, AmazonClientException {
 		return delegate.getBucketReplicationConfiguration(getBucketReplicationConfigurationRequest);
+	}
+
+	@Override
+	public ListObjectsV2Result listObjectsV2(String bucketName) throws AmazonClientException, AmazonServiceException {
+		return delegate.listObjectsV2(bucketName);
+	}
+
+
+	@Override
+	public ListObjectsV2Result listObjectsV2(String bucketName, String prefix)
+			throws AmazonClientException, AmazonServiceException {
+		return delegate.listObjectsV2(bucketName, prefix);
+	}
+
+
+	@Override
+	public ListObjectsV2Result listObjectsV2(ListObjectsV2Request listObjectsV2Request)
+			throws AmazonClientException, AmazonServiceException {
+		return delegate.listObjectsV2(listObjectsV2Request);
+	}
+
+
+	@Override
+	public HeadBucketResult headBucket(HeadBucketRequest headBucketRequest)
+			throws AmazonClientException, AmazonServiceException {
+		return delegate.headBucket(headBucketRequest);
+	}
+
+
+	@Override
+	public AccessControlList getObjectAcl(GetObjectAclRequest getObjectAclRequest)
+			throws AmazonClientException, AmazonServiceException {
+		return delegate.getObjectAcl(getObjectAclRequest);
+	}
+
+
+	@Override
+	public String getObjectAsString(String bucketName, String key)
+			throws AmazonServiceException, AmazonClientException {
+		return delegate.getObjectAsString(bucketName, key);
+	}
+
+
+	@Override
+	public PutObjectResult putObject(String bucketName, String key, String content)
+			throws AmazonServiceException, AmazonClientException {
+		return delegate.putObject(bucketName, key, content);
+	}
+
+
+	@Override
+	public void deleteBucketReplicationConfiguration(DeleteBucketReplicationConfigurationRequest request)
+			throws AmazonServiceException, AmazonClientException {
+		delegate.deleteBucketReplicationConfiguration(request);
+	}
+
+
+	@Override
+	public boolean doesObjectExist(String bucketName, String objectName)
+			throws AmazonServiceException, AmazonClientException {
+		return delegate.doesObjectExist(bucketName, objectName);
+	}
+
+
+	@Override
+	public BucketAccelerateConfiguration getBucketAccelerateConfiguration(String bucket)
+			throws AmazonServiceException, AmazonClientException {
+		return delegate.getBucketAccelerateConfiguration(bucket);
+	}
+
+
+	@Override
+	public BucketAccelerateConfiguration getBucketAccelerateConfiguration(
+			GetBucketAccelerateConfigurationRequest getBucketAccelerateConfigurationRequest)
+			throws AmazonServiceException, AmazonClientException {
+		return delegate.getBucketAccelerateConfiguration(getBucketAccelerateConfigurationRequest);
+	}
+
+
+	@Override
+	public void setBucketAccelerateConfiguration(String bucketName,
+			BucketAccelerateConfiguration accelerateConfiguration)
+			throws AmazonServiceException, AmazonClientException {
+		delegate.setBucketAccelerateConfiguration(bucketName, accelerateConfiguration);
+	}
+
+
+	@Override
+	public void setBucketAccelerateConfiguration(
+			SetBucketAccelerateConfigurationRequest setBucketAccelerateConfigurationRequest)
+			throws AmazonServiceException, AmazonClientException {
+		delegate.setBucketAccelerateConfiguration(setBucketAccelerateConfigurationRequest);
+	}
+
+
+	@Override
+	public com.amazonaws.services.s3.model.Region getRegion() {
+		return delegate.getRegion();
+	}
+
+
+	@Override
+	public String getRegionName() {
+		return delegate.getRegionName();
+	}
+
+
+	@Override
+	public URL getUrl(String bucketName, String key) {
+		return delegate.getUrl(bucketName, key);
+	}
+
+
+	@Override
+	public AmazonS3Waiters waiters() {
+		return delegate.waiters();
 	}
 }
