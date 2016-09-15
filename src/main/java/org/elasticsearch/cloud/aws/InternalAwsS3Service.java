@@ -111,11 +111,11 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
             throw new ElasticsearchIllegalArgumentException("No protocol supported [" + protocol + "], can either be [http] or [https]");
         }
 
-        String proxyHost = settings.get("cloud.aws.proxy_host");
-        proxyHost = settings.get("cloud.aws.s3.proxy_host", proxyHost);
+        String proxyHost = componentSettings.get("proxy_host");
+        proxyHost = componentSettings.get("s3.proxy_host", proxyHost);
         if (proxyHost != null) {
-            String portString = settings.get("cloud.aws.proxy_port", "80");
-            portString = settings.get("cloud.aws.s3.proxy_port", portString);
+            String portString = componentSettings.get("proxy_port", "80");
+            portString = componentSettings.get("s3.proxy_port", portString);
             Integer proxyPort;
             try {
                 proxyPort = Integer.parseInt(portString, 10);
@@ -131,7 +131,7 @@ public class InternalAwsS3Service extends AbstractLifecycleComponent<AwsS3Servic
         }
 
         // #155: we might have 3rd party users using older S3 API version
-        String awsSigner = settings.get("cloud.aws.s3.signer", settings.get("cloud.aws.signer"));
+        String awsSigner = componentSettings.get("s3.signer", componentSettings.get("signer"));
         if (awsSigner != null) {
             logger.debug("using AWS API signer [{}]", awsSigner);
             try {
